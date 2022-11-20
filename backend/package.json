@@ -4,12 +4,15 @@
   "description": "This is the notes taking web application with authentication using Tailwindcss, ReactJS, Express and some of their modules.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon"
   },
   "author": "Barun Tiwary",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.18.2",
     "mongoose": "^6.7.2"
+  },
+  "devDependencies": {
+    "express": "^4.18.2",
+    "nodemon": "^2.0.20"
   }
 }
