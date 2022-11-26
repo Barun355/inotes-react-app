@@ -9,6 +9,8 @@
   "author": "Barun Tiwary",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.1.0",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.7.2"
   },
   "devDependencies": {
