@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 // importing the express module to create the backend API for our iNotes app {npm i express to install the express}
 const express = require("express");
 
@@ -6,7 +8,6 @@ const bcyrpt = require('bcrypt')
 
 // imported JWT(Json Web Token) to send the unique token as a response to the use in return to the request to this end point.
 const jwt = require('jsonwebtoken');
-const JWT_SECRET = "Thisisthesecretsignature";
 
 // initiating the Router method of the express. It is used to create the new routes or manage the new end points in express.
 const router = express.Router();
@@ -63,7 +64,7 @@ router.post('/createUser', [
                 id: user.id
             }
         }
-        const auth_token = jwt.sign(data, JWT_SECRET)
+        const auth_token = jwt.sign(data, process.env.JWT_SECRET)
         res.json({ auth_token });
 
     } catch (error) {
@@ -102,7 +103,7 @@ router.post('/login', [
             }
         }
 
-        const auth_token = jwt.sign(data, JWT_SECRET);
+        const auth_token = jwt.sign(data, process.env.JWT_SECRET);
 
         res.send({auth_token});
 
