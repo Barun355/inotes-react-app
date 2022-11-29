@@ -29,14 +29,16 @@ router.post('/createUser', [
     body('email', 'Enter the correct email.').isEmail(),
     body('password', 'The length of the password must be more that 5').isLength({ min: 5 }),
 ], async (req, res) => {
-
+    
+    let success = false;
     try {
+
         // getting the result of the request to this end point and storing it to the constant as an error to throw error if any.
         const error = validationResult(req);
 
         // checking if their is any error and send the response according to it
         if (!error.isEmpty()) {
-            return res.status(404).json({ errors: error.array() });
+            return res.status(404).json({success, errors: error.array() });
         }
 
         const salt = await bcyrpt.genSalt(10);
@@ -46,7 +48,7 @@ router.post('/createUser', [
         let user = await User.findOne({ email: req.body.email });
         if (user) {
             console.log(user);
-            return res.status(404).json({ error: "Sorry a user already exist with this email" });
+            return res.status(404).json({success, error: "Sorry a user already exist with this email" });
         }
 
         // creating user if the user not exist.
@@ -65,11 +67,12 @@ router.post('/createUser', [
             }
         }
         const auth_token = jwt.sign(data, process.env.JWT_SECRET)
-        res.json({ auth_token });
+        success = true;
+        res.json({ auth_token, success });
 
     } catch (error) {
         console.error(error.message);
-        res.status(500).send("Some error occured.");
+        res.status(500).send(success, "Some error occured.");
     }
 });
 
@@ -78,7 +81,7 @@ router.post('/login', [
     body('email', 'Enter the correct email.').isEmail({ min: 3 }),
     body('password', 'Enter the correcct password which should be minimum of 5 length.').isLength({ min: 5 })
 ], async (req, res) => {
-
+    let success = false;
     const error = validationResult(req);
     if (!error.isEmpty()) {
         return res.status(400).json({ error: error.array() });
@@ -90,11 +93,11 @@ router.post('/login', [
         const user = await User.findOne({ email });
 
         if (!user) {
-        return res.status(400).json({ error: "Pls login with the correct credentials" });
+        return res.status(400).json({success, error: "Pls login with the correct credentials" });
         }
         const passwordCheck = await bcyrpt.compare(password, user.password);
         if (!passwordCheck) {
-            return res.status(400).json({ error: "Pls login with correct credentials" });
+            return res.status(400).json({success, error: "Pls login with correct credentials" });
         }
 
         const data = {
@@ -104,12 +107,12 @@ router.post('/login', [
         }
 
         const auth_token = jwt.sign(data, process.env.JWT_SECRET);
-
-        res.send({auth_token});
+        success = true;
+        res.send({success, auth_token});
 
     } catch (error) {
         console.log(error.message);
-        res.status(500).json({error: "Internal Server error"});
+        res.status(500).json({success, error: "Internal Server error"});
 
     }
 });

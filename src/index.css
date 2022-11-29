@@ -3,6 +3,9 @@
 @tailwind utilities;
 
 
+/* ::-webkit-scrollbar{
+    display: none;
+} */
 
 i{
     cursor: pointer;
